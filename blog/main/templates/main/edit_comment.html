@@ -1,0 +1,8 @@
+{% extends 'layout/base.html' %}
+{% block content %}
+<form method='POST' action='/edit-comment'>
+    <label for='comment'>Редактировать комментарий:</label><br>
+    <textarea id='comment' name='comment' rows='4' cols='50'>Текст оригинального комментария здесь</textarea><br><br>
+    <input type='submit' value='Отправить'>
+</form>
+{% endblock %}
