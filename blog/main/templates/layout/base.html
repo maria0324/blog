@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='slim' %}
-  <title>{% block title %} Главная {% endblock %} - Электронная доска объявлений </title>
+  <title>{% block title %} Главная {% endblock %}  </title>
 </head>
 <body>
 <div class="container-fluid">
@@ -29,7 +29,7 @@
       <a class="p-2 text-dark" href="{% url 'main:login'%}">Вход</a>
       {% endif %}  </div>
 
-
+{% block content%} {% endblock %}
 </div>
 </body>
 </html>

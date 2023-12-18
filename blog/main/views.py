@@ -10,6 +10,7 @@ from django.contrib.auth.views import LogoutView
 
 class BBLogoutView(LoginRequiredMixin, LogoutView):
     template_name = 'main/logout.html'
+    success_url = reverse_lazy('main:home')
 
 
 class BBLoginView(LoginView):
