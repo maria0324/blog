@@ -1,18 +1,21 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+
 from .models import Profile, Post, Comment
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LogoutView
 
 
-
-
 class BBLogoutView(LoginRequiredMixin, LogoutView):
-   template_name = 'main/logout.html'
+    template_name = 'main/logout.html'
+
 
 class BBLoginView(LoginView):
-   template_name = 'main/login.html'
+    template_name = 'main/login.html'
+    success_url = reverse_lazy('main:home')
+
 
 def home(request):
     posts_list = Post.objects.all().order_by('-created_at')
@@ -23,9 +26,11 @@ def home(request):
 
     return render(request, 'main/home.html', {'posts': posts})
 
+
 def profile(request, profile_id):
     profile = Profile.objects.get(id=profile_id)
     return render(request, 'main/profile.html', {'profile': profile})
+
 
 def edit_profile(request, profile_id):
     profile = Profile.objects.get(id=profile_id)
@@ -34,6 +39,7 @@ def edit_profile(request, profile_id):
         pass
     return render(request, 'main/edit_profile.html', {'profile': profile})
 
+
 def delete_profile(request, profile_id):
     profile = Profile.objects.get(id=profile_id)
     if request.method == 'POST':
@@ -41,12 +47,14 @@ def delete_profile(request, profile_id):
         return redirect('home')
     return render(request, 'main/confirm_delete.html', {'profile': profile})
 
+
 def edit_comment(request, comment_id):
     comment = Comment.objects.get(id=comment_id)
     if request.method == 'POST':
         # Обновите комментарий здесь
         pass
     return render(request, 'main/edit_comment.html', {'comment': comment})
+
 
 def delete_comment(request, comment_id):
     comment = Comment.objects.get(id=comment_id)
