@@ -6,11 +6,25 @@ from .models import Profile, Post, Comment
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LogoutView
+from django.shortcuts import render, redirect
+from .forms import RegisterForm
 
+
+
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = RegisterForm()
+    return render(request, 'main/register_user.html', {'form': form})
 
 class BBLogoutView(LoginRequiredMixin, LogoutView):
     template_name = 'main/logout.html'
-    success_url = reverse_lazy('main:home')
+    success_url = reverse_lazy('home')
 
 
 class BBLoginView(LoginView):
@@ -63,3 +77,18 @@ def delete_comment(request, comment_id):
         comment.delete()
         return redirect('home')
     return render(request, 'main/confirm_delete.html', {'comment': comment})
+
+
+
+from .forms import ProfileForm
+
+def edit_profile(request, profile_id):
+    profile = Profile.objects.get(id=profile_id)
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('main:profile', profile_id=profile.id)
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request, 'main/edit_profile.html', {'form': form})
