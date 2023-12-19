@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from .forms import PostForm
 
 from .models import Profile, Post, Comment
 from django.contrib.auth.views import LoginView
@@ -80,15 +81,17 @@ def delete_comment(request, comment_id):
 
 
 
-from .forms import ProfileForm
 
-def edit_profile(request, profile_id):
+
+def create_post(request, profile_id):
     profile = Profile.objects.get(id=profile_id)
     if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('main:profile', profile_id=profile.id)
+            post = form.save(commit=False)
+            post.author = profile
+            post.save()
+            return redirect('profile', profile_id=profile.id)
     else:
-        form = ProfileForm(instance=profile)
-    return render(request, 'main/edit_profile.html', {'form': form})
+        form = PostForm()
+    return render(request, 'main/create_post.html', {'form': form, 'profile': profile})
